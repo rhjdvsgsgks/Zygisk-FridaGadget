@@ -41,7 +41,6 @@ static bool isApp(int uid) {
 
 static void* gadget(void* args){
 
-    sleep(10);
     void *handle = dlopen(nextLoadSo, RTLD_LAZY);
     if (!handle) {
         LOGD(" %s loaded in libgadget error %s", nice_process_name, dlerror());
