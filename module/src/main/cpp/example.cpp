@@ -8,7 +8,6 @@
 #include <cstring>
 #include <dlfcn.h>
 #include "zygisk.hpp"
-#include <pthread.h>
 
 using zygisk::Api;
 using zygisk::AppSpecializeArgs;
@@ -25,9 +24,6 @@ constexpr const char* kZygoteNiceName = "zygote";
 constexpr const char* nextLoadSo = "/system/lib/libminitool.so";
 #endif
 
-static char nice_process_name[256] = {0};
-static char package_name[256] = {0};
-
 static bool isApp(int uid) {
     if (uid < 0) {
         return false;
@@ -39,22 +35,13 @@ static bool isApp(int uid) {
     return appId >= 10000 && appId <= 19999;
 }
 
-static void* gadget(void* args){
-
-    void *handle = dlopen(nextLoadSo, RTLD_LAZY);
-    if (!handle) {
-        LOGD(" %s loaded in libgadget error %s", nice_process_name, dlerror());
-    } else {
-        LOGD(" %s load ' %s ' success ", nice_process_name,nextLoadSo);
-    }
-    return nullptr;
-}
-
 class MyModule : public zygisk::ModuleBase {
 
 private:
     Api *api;
     JNIEnv *env;
+    char nice_process_name[256] = {0};
+    char package_name[256] = {0};
     jint my_uid = 0;
 
 public:
@@ -158,11 +145,11 @@ public:
             jstring name = env->NewStringUTF(nice_process_name);
             env->CallStaticVoidMethod(java_Process, mtd_setArgV0, name);
 
-            pthread_t tid;
-            int ret = pthread_create(&tid, NULL, gadget, NULL);
-            if (ret != 0)
-            {
-                LOGD("pthread_create error: error_code=%d" ,ret);
+            void *handle = dlopen(nextLoadSo, RTLD_LAZY);
+            if (!handle) {
+                LOGD(" %s loaded in libgadget error %s", nice_process_name, dlerror());
+            } else {
+                LOGD(" %s load ' %s ' success ", nice_process_name,nextLoadSo);
             }
         }
     }
