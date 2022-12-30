@@ -1,9 +1,6 @@
 {
   "interaction": {
     "type": "listen",
-    "address": "127.0.0.1",
-    "port": 26000,
-    "on_port_conflict": "fail",
-    "on_load": "resume"
+    "address": "0.0.0.0"
   }
 }
