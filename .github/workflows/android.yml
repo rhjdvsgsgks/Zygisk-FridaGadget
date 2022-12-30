@@ -23,4 +23,4 @@ jobs:
       run: ./gradlew :module:assembleRelease
     - uses: actions/upload-artifact@v3
       with:
-        path: out/
+        path: out/magisk_module_release/
