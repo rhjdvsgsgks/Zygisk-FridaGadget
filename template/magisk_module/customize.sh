@@ -99,6 +99,4 @@ if [ "$ARCH" = "arm" ] || [ "$ARCH" = "arm64" ]; then
   extract "$ZIPFILE" "system/lib64/libminitool.config.so" "$MODPATH/system/lib64" true
 fi
 
-extract "$ZIPFILE" "system/etc/minitool.prop" "$MODPATH/system/etc" true
-
 set_perm_recursive "$MODPATH" 0 0 0755 0644
